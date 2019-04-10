@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ff42404c"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/iv_back"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/pwd_back_arr" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            android:gravity="center"
+            android:text="@string/menus_more"
+            android:textColor="#ffffffff"
+            android:textSize="10sp" />
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/fl_3"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingStart="5dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:drawableStart="@drawable/more_menu_3"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@string/more_title_3"
+            android:textColor="#ffffffff"
+            android:textSize="8sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_5"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingStart="5dp">
+
+        <TextView
+            android:id="@+id/tv_add_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:drawableStart="@drawable/more_menu_4"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="新增商品"
+            android:textColor="#ffffffff"
+            android:textSize="8sp" />
+    </FrameLayout>
+</LinearLayout>
