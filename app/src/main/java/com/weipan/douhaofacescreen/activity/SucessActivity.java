@@ -81,6 +81,7 @@ public class SucessActivity extends BaseActivity {
 
     @OnClick({R.id.tv_time_tiger})
     public void onViewClicked(View view) {
+        ringtone.play();
         switch (view.getId()) {
             case R.id.tv_time_tiger:
                 finish();

@@ -2,6 +2,9 @@ package com.weipan.douhaofacescreen.view;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.Utils;
 import com.weipan.douhaofacescreen.R;
 import com.weipan.douhaofacescreen.activity.MainActivity;
 import com.weipan.douhaofacescreen.util.CountDownConfrimHelper;
@@ -28,6 +32,7 @@ public class CloseConfirmDialog extends Dialog {
     private OnCloseOrderLitener onCloseOrderLitener;
     public CountDownConfrimHelper helper;
     private TextView tvClose;
+    private Ringtone ringtone;
 
     public interface OnCloseOrderLitener {
         void close();
@@ -86,28 +91,16 @@ public class CloseConfirmDialog extends Dialog {
         setCancelable(false);
         setCanceledOnTouchOutside(false);
 
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        ringtone = RingtoneManager.getRingtone(Utils.getApp(), notification);
+
         tvClose = findViewById(R.id.tv_close);
         TextView tvCotinue = findViewById(R.id.tv_cotinue);
-//        helper = new CountDownConfrimHelper(tvClose, 10, 1);
-//        helper.setOnFinishListener(new CountDownConfrimHelper.OnFinishListener() {
-//            @Override
-//            public void fin() {
-//                if (!ObjectUtils.isEmpty(onCloseOrderLitener)) {
-//                    if (!ObjectUtils.isEmpty(helper)) {
-//                        helper.stop();
-//                    }
-//                    helper = null;
-//                    dismiss();
-//                    onCloseOrderLitener.close();
-//                }
-//
-//            }
-//        });
-//        helper.start();
         tvClose.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                ringtone.play();
                 if (!ObjectUtils.isEmpty(onCloseOrderLitener)) {
                     if (!ObjectUtils.isEmpty(helper)) {
                         helper.stop();
@@ -123,6 +116,7 @@ public class CloseConfirmDialog extends Dialog {
 
             @Override
             public void onClick(View v) {
+                ringtone.play();
                 if (!ObjectUtils.isEmpty(helper)) {
                     helper.stop();
                 }

@@ -37,6 +37,7 @@ public class StartActivity extends BaseActivity {
 
     @OnClick({R.id.iv_setting, R.id.tv_no_member, R.id.tv_member})
     public void onViewClicked(View view) {
+        ringtone.play();
         switch (view.getId()) {
             case R.id.iv_setting:
                 Intent intent = new Intent(StartActivity.this, MoreActivity.class);

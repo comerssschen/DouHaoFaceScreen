@@ -36,6 +36,7 @@ public class FailActivity extends BaseActivity {
 
     @OnClick({R.id.bt_try_again, R.id.bt_cancel})
     public void onViewClicked(View view) {
+        ringtone.play();
         switch (view.getId()) {
             case R.id.bt_try_again:
                 finish();

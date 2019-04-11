@@ -84,7 +84,7 @@
             android:layout_height="20dp"
             android:layout_marginLeft="5dp"
             android:background="@drawable/personal_button_selector"
-            android:enabled="false"
+            android:enabled="true"
             android:text="确认结算"
             android:textColor="@color/white"
             android:textSize="8sp" />

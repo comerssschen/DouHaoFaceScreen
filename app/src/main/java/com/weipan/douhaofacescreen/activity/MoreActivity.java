@@ -55,6 +55,7 @@ public class MoreActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        ringtone.play();
         switch (v.getId()) {
             case R.id.fl_3:
                 checkState(2);

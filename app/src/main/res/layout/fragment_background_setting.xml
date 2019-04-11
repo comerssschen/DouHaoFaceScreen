@@ -176,7 +176,7 @@
             android:textColor="#FF4A4A4A"
             android:textSize="10sp" />
 
-        <com.weipan.smk1.view.CustomCarGoodsCounterView
+        <com.weipan.douhaofacescreen.view.CustomCarGoodsCounterView
             android:id="@+id/et_num"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
