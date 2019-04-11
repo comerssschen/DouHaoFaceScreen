@@ -377,13 +377,13 @@ public class MainActivity extends BaseActivity {
         localHashMap.put("authinfo", Constant.authInfo);
         localHashMap.put("payresult", "SUCCESS");
 
+        Log.i("test", "localHashMap =  " + localHashMap.toString());
         WxPayFace.getInstance().getWxpayfaceCode(localHashMap, new IWxPayfaceCallback() {
             public void response(final Map paramMap) throws RemoteException {
                 Log.i("test", "response | getWxpayfaceCode " + paramMap);
                 String code = paramMap.get("return_code").toString();
                 if (TextUtils.equals(code, "SUCCESS")) {
-                    String url = Constant.localhostUrl + "/api/Pay/FacePay?appid=wxb521f5422a6c458d&mch_id=1491129582&sub_appid=wxddd1a06745848ded&sub_mch_id=1505209351&out_trade_no=" + outTratNum + "&total_fee=" + realPayMoney + "&openid=" + paramMap.get("openid").toString() + "&face_code=" + paramMap.get("face_code").toString();
-                    Log.i("test", "FacePay = " + url);
+                    String url = Constant.localhostUrl + "/api/Pay/FacePay?appid=" + Constant.appid + "&mch_id=" + Constant.mch_id + "&sub_appid=" + Constant.sub_appid + "&sub_mch_id=" + Constant.sub_mch_id + "&out_trade_no=" + outTratNum + "&total_fee=" + realPayMoney + "&openid=" + paramMap.get("openid").toString() + "&face_code=" + paramMap.get("face_code").toString();
                     OkGo.<String>get(url)
                             .execute(new StringCallback() {
                                 @Override
