@@ -18,6 +18,21 @@ public class MenusBean implements Serializable {
     private int imgId;
     private String imgUrl;
 
+    public MenusBean() {
+    }
+
+    public MenusBean(String id, String name, String money, String code, String unit, String unitPrice, int count, int imgId, String imgUrl) {
+        this.id = id;
+        this.name = name;
+        this.money = money;
+        this.code = code;
+        this.unit = unit;
+        this.unitPrice = unitPrice;
+        this.count = count;
+        this.imgId = imgId;
+        this.imgUrl = imgUrl;
+    }
+
     public String getImgUrl() {
         return imgUrl;
     }

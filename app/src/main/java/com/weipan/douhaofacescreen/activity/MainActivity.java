@@ -1,9 +1,13 @@
 package com.weipan.douhaofacescreen.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,16 +24,23 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.felhr.usbserial.UsbSerialInterface;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.superscan.lib.device.usb.AsyncUsbScanner;
+import com.superscan.lib.device.usb.UsbToolKit;
 import com.tencent.wxpayface.IWxPayfaceCallback;
 import com.tencent.wxpayface.WxPayFace;
+import com.tx.printlib.Const;
+import com.tx.printlib.UsbPrinter;
+import com.weipan.douhaofacescreen.R;
 import com.weipan.douhaofacescreen.adapter.CarAdapter;
 import com.weipan.douhaofacescreen.bean.ArgScanQRCode;
 import com.weipan.douhaofacescreen.bean.GoodsCode;
@@ -50,14 +61,13 @@ import com.weipan.douhaofacescreen.view.EditGoodsDialog;
 import com.weipan.douhaofacescreen.view.LoadingDialog;
 import com.weipan.douhaofacescreen.view.PayPopupWindow;
 import com.weipan.douhaofacescreen.view.ScanQrCodeDialog;
-import com.weipan.douhaofacescreen.R;
-
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -93,12 +103,39 @@ public class MainActivity extends BaseActivity {
     private CountDownHelper helper;
     private LoadingDialog loadingDialog;
 
+    private AsyncUsbScanner asyncUsbScanner;
+    private UsbPrinter mUsbPrinter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         init();
+        initScan();
+        MenusBean menusBean = new MenusBean("46", "可口可乐", "0.02", "564654564", "个", "0.02", 2, R.drawable.product_default, "");
+        menus.add(menusBean);
+        DouHaoPrint(menus, "dgdfg");
+    }
+
+    private void initScan() {
+        UsbToolKit usbToolKit = new UsbToolKit(MainActivity.this);
+        List<UsbDevice> usbDevices = usbToolKit.listDevices();
+        assert usbDevices.size() > 0;
+        asyncUsbScanner = new AsyncUsbScanner(usbDevices.get(0), usbToolKit.getUsbManager(), new UsbSerialInterface.UsbReadCallback() {
+            @Override
+            public void onReceivedData(byte[] bytes) {
+                String msg = new String(bytes).trim();
+                Log.i("test", msg);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        scanResult(msg);
+                    }
+                });
+            }
+        });
+        asyncUsbScanner.open();
     }
 
 
@@ -192,14 +229,84 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        mUsbPrinter = new UsbPrinter(MainActivity.this);
     }
 
     public void doSuceess(String payType) {
+        DouHaoPrint(menus, payType);
         Intent intent = new Intent(MainActivity.this, SucessActivity.class);
         intent.putExtra("menus", (Serializable) menus);
         intent.putExtra("count", totalCount);
         startActivity(intent);
         finish();
+    }
+
+    private UsbDevice getCorrectDevice() {
+        final UsbManager usbMgr = (UsbManager) getSystemService(Context.USB_SERVICE);
+        final Map<String, UsbDevice> devMap = usbMgr.getDeviceList();
+        for (String name : devMap.keySet()) {
+            Log.v("test", "check device: " + name);
+            if (UsbPrinter.checkPrinter(devMap.get(name)))
+                return devMap.get(name);
+        }
+        return null;
+    }
+
+    public void DouHaoPrint(ArrayList<MenusBean> menus, String payType) {
+        final UsbDevice dev = getCorrectDevice();
+        if (dev != null && mUsbPrinter.open(dev)) {
+            mUsbPrinter.init();
+            mUsbPrinter.doFunction(Const.TX_ALIGN, Const.TX_ALIGN_CENTER, 0);
+            mUsbPrinter.outputStringLn("杭州微盘每日付收款明细");
+            mUsbPrinter.outputStringLn("\n********************************");
+            mUsbPrinter.doFunction(Const.TX_ALIGN, Const.TX_ALIGN_LEFT, 0);
+            mUsbPrinter.outputStringLn("店员号：032  POS号32");
+            mUsbPrinter.outputStringLn("下单时间：" + TimeUtils.getNowString());
+            mUsbPrinter.outputStringLn("支付方式：" + payType);
+            mUsbPrinter.outputStringLn("********************************");
+            printString("商品名称/数量/单位", "合计");
+            mUsbPrinter.outputStringLn("--------------------------------");
+            float price = 0.00f;
+            for (MenusBean menu : menus) {
+                printString(menu.getName() + " * " + menu.getCount() + " " + menu.getUnit(), menu.getMoney().replace("¥", "￥"));
+                price = price + Float.parseFloat(menu.getMoney().substring(1));
+            }
+            mUsbPrinter.outputStringLn("--------------------------------");
+            printString("自助收银", "共" + totalCount + "件");
+            printString("商品合计", "￥" + price);
+            printString("优惠金额", "-￥0.00");
+            printString("优惠券金额", "-￥0.00");
+            mUsbPrinter.outputStringLn("\n");
+            printString("应付金额", "￥" + price);
+            printString("实际支付金额", "￥" + realPayMoney);
+            mUsbPrinter.outputStringLn("\n依法预付费卡、第三方卡、支付优惠的支付方式其消费金额不再重复开立发票");
+            mUsbPrinter.outputStringLn("\n--------------------------------");
+
+            mUsbPrinter.doFunction(Const.TX_FEED, 10, 0);
+
+            mUsbPrinter.doFunction(Const.TX_UNIT_TYPE, Const.TX_UNIT_PIXEL, 0);
+            mUsbPrinter.doFunction(Const.TX_FEED, 140, 0);
+            mUsbPrinter.doFunction(Const.TX_CUT, Const.TX_CUT_FULL, 0);
+
+            mUsbPrinter.close();
+        }
+
+    }
+
+    private void printString(String left, String right) {
+        int lLength = 0;
+        int rLength = 0;
+        try {
+            lLength = left.getBytes("GBK").length;
+            rLength = right.getBytes("GBK").length;
+            mUsbPrinter.doFunction(Const.TX_ALIGN, Const.TX_ALIGN_LEFT, 0);
+            String nullString = "                                ";
+            mUsbPrinter.outputStringLn(left + nullString.substring(0, 32 - lLength - rLength) + right);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.i("test", "lLength = " + lLength);
+        Log.i("test", "rLength = " + rLength);
     }
 
     private StringBuilder sb = new StringBuilder();
@@ -498,6 +605,10 @@ public class MainActivity extends BaseActivity {
         mPhotoPopupWindow = null;
         scanQrCodeDialog = null;
         closeConfirmDialog = null;
+        asyncUsbScanner.close();
+        mUsbPrinter.close();
+        mUsbPrinter = null;
+
     }
 
 

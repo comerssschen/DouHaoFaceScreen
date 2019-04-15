@@ -65,7 +65,11 @@ dependencies {
     implementation 'org.greenrobot:greendao-generator:3.2.2'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation(name: 'wxfacepay-release', ext: 'aar')
-
+    implementation(name: 'wxfacepay-release', ext: 'aar')//微信扫脸
+    implementation 'org.apache.commons:commons-compress:1.8'//逗号扫码
+    implementation 'org.tukaani:xz:1.6'//逗号扫码
+    implementation 'com.github.felHR85:UsbSerial:4.5'//逗号扫码
+    implementation files('libs/devicedriver.jar')//逗号扫码
+    implementation(name: 'printlib-debug', ext: 'aar')//逗号打印
 
 }
