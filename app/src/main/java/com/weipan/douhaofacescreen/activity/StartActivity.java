@@ -81,21 +81,21 @@ public class StartActivity extends BaseActivity {
                                     if (ObjectUtils.equals("200", result.getCode())) {
                                         Constant.authInfo = result.getData().getAuthinfo();
                                         //开启一个子线程，定时刷新
-                                        new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Looper.prepare();
-                                                try {
-//                                                    int millis = Integer.parseInt(result.getData().getExpires_in());
-//                                                    Log.i("test", millis + "");
-                                                    Thread.sleep(24 * 60 * 60 * 1000);
-                                                    getAuthInfo();
-                                                } catch (InterruptedException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                Looper.loop();
-                                            }
-                                        }).start();
+//                                        new Thread(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                Looper.prepare();
+//                                                try {
+////                                                    int millis = Integer.parseInt(result.getData().getExpires_in());
+////                                                    Log.i("test", millis + "");
+//                                                    Thread.sleep(24 * 60 * 60 * 1000);
+//                                                    getAuthInfo();
+//                                                } catch (InterruptedException e) {
+//                                                    e.printStackTrace();
+//                                                }
+//                                                Looper.loop();
+//                                            }
+//                                        }).start();
                                     } else {
                                         Toast.makeText(getApplicationContext(), " Msg = " + result.getMsg(), Toast.LENGTH_LONG).show();
                                     }

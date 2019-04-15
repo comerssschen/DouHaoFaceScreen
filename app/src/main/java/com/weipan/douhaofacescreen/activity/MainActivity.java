@@ -291,7 +291,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
     public void updateView() {
         ringtone.play();
         float price = 0.00f;
@@ -388,6 +387,7 @@ public class MainActivity extends BaseActivity {
                             .execute(new StringCallback() {
                                 @Override
                                 public void onSuccess(Response<String> response) {
+                                    Log.i("test", "response.body() = " + response.body());
                                     try {
                                         ResultFacePay resultFacePay = gson.fromJson(response.body(), ResultFacePay.class);
                                         if (ObjectUtils.equals(resultFacePay.getCode(), "200")) {
