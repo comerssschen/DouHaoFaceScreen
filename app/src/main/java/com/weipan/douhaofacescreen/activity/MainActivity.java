@@ -113,9 +113,12 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         init();
         initScan();
-        MenusBean menusBean = new MenusBean("46", "可口可乐", "0.02", "564654564", "个", "0.02", 2, R.drawable.product_default, "");
-        menus.add(menusBean);
-        DouHaoPrint(menus, "dgdfg");
+//        MenusBean menusBean = new MenusBean("46", "可口可乐", "0.02", "564654564", "个", "0.02", 2, R.drawable.product_default, "");
+//        menus.add(menusBean);
+//        menus.add(menusBean);
+//        MenusBean menusBean1 = new MenusBean("46", "可口可乐sodifjsodijfoisj哦is好的佛教是54544", "0.02", "564654564", "个", "0.02", 2, R.drawable.product_default, "");
+//        menus.add(menusBean1);
+//        DouHaoPrint(menus, "支付方式001");
     }
 
     private void initScan() {
@@ -130,7 +133,11 @@ public class MainActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        scanResult(msg);
+                        if (!ObjectUtils.isEmpty(scanQrCodeDialog) && scanQrCodeDialog.isShowing()) {
+                            scanQRCode(msg);
+                        } else {
+                            scanResult(msg);
+                        }
                     }
                 });
             }
@@ -260,7 +267,7 @@ public class MainActivity extends BaseActivity {
             mUsbPrinter.outputStringLn("杭州微盘每日付收款明细");
             mUsbPrinter.outputStringLn("\n********************************");
             mUsbPrinter.doFunction(Const.TX_ALIGN, Const.TX_ALIGN_LEFT, 0);
-            mUsbPrinter.outputStringLn("店员号：032  POS号32");
+            mUsbPrinter.outputStringLn("店 员 号：032  POS号：32");
             mUsbPrinter.outputStringLn("下单时间：" + TimeUtils.getNowString());
             mUsbPrinter.outputStringLn("支付方式：" + payType);
             mUsbPrinter.outputStringLn("********************************");
@@ -276,18 +283,16 @@ public class MainActivity extends BaseActivity {
             printString("商品合计", "￥" + price);
             printString("优惠金额", "-￥0.00");
             printString("优惠券金额", "-￥0.00");
-            mUsbPrinter.outputStringLn("\n");
+            mUsbPrinter.outputStringLn(" ");
             printString("应付金额", "￥" + price);
             printString("实际支付金额", "￥" + realPayMoney);
             mUsbPrinter.outputStringLn("\n依法预付费卡、第三方卡、支付优惠的支付方式其消费金额不再重复开立发票");
             mUsbPrinter.outputStringLn("\n--------------------------------");
-
             mUsbPrinter.doFunction(Const.TX_FEED, 10, 0);
 
             mUsbPrinter.doFunction(Const.TX_UNIT_TYPE, Const.TX_UNIT_PIXEL, 0);
             mUsbPrinter.doFunction(Const.TX_FEED, 140, 0);
             mUsbPrinter.doFunction(Const.TX_CUT, Const.TX_CUT_FULL, 0);
-
             mUsbPrinter.close();
         }
 
@@ -301,12 +306,15 @@ public class MainActivity extends BaseActivity {
             rLength = right.getBytes("GBK").length;
             mUsbPrinter.doFunction(Const.TX_ALIGN, Const.TX_ALIGN_LEFT, 0);
             String nullString = "                                ";
-            mUsbPrinter.outputStringLn(left + nullString.substring(0, 32 - lLength - rLength) + right);
+            if (left.length() > 32) {
+                mUsbPrinter.outputStringLn(left + nullString.substring(0, 64 - lLength - rLength) + right);
+            } else {
+                mUsbPrinter.outputStringLn(left + nullString.substring(0, 32 - lLength - rLength) + right);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i("test", "lLength = " + lLength);
-        Log.i("test", "rLength = " + rLength);
     }
 
     private StringBuilder sb = new StringBuilder();
