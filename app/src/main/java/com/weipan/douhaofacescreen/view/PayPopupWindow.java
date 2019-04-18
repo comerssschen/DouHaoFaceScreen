@@ -57,9 +57,8 @@ public class PayPopupWindow extends PopupWindow {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert inflater != null;
         mView = inflater.inflate(R.layout.pop_pay_dialog, null);
-        TextView tvFacePay = mView.findViewById(R.id.tv_face_pay);
-        TextView tvBt2 = mView.findViewById(R.id.tv_bt2);
-        TextView tvBt3 = mView.findViewById(R.id.tv_bt3);
+        ImageView tvFacePay = mView.findViewById(R.id.tv_face_pay);
+        ImageView tvBt2 = mView.findViewById(R.id.tv_bt2);
         TextView tvParm1 = mView.findViewById(R.id.tv_parm1);
         TextView tvParm2 = mView.findViewById(R.id.tv_parm2);
         tvParm1.setText(mParm1);
@@ -91,15 +90,6 @@ public class PayPopupWindow extends PopupWindow {
                 ringtone.play();
                 if (mLlistener != null) {
                     mLlistener.onPart2();
-                }
-            }
-        });
-        tvBt3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ringtone.play();
-                if (mLlistener != null) {
-                    mLlistener.onPart3();
                 }
             }
         });

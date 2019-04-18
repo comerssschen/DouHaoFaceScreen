@@ -7,7 +7,6 @@ import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,7 +64,6 @@ import com.weipan.douhaofacescreen.view.ScanQrCodeDialog;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,12 +111,6 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         init();
         initScan();
-//        MenusBean menusBean = new MenusBean("46", "可口可乐", "0.02", "564654564", "个", "0.02", 2, R.drawable.product_default, "");
-//        menus.add(menusBean);
-//        menus.add(menusBean);
-//        MenusBean menusBean1 = new MenusBean("46", "可口可乐sodifjsodijfoisj哦is好的佛教是54544", "0.02", "564654564", "个", "0.02", 2, R.drawable.product_default, "");
-//        menus.add(menusBean1);
-//        DouHaoPrint(menus, "支付方式001");
     }
 
     private void initScan() {
