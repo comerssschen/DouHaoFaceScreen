@@ -22,9 +22,17 @@ android {
         versionName "1.0"
     }
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        buildTypes {
+            debug {
+                buildConfigField "boolean", "LOG_DEBUG", "true"// 显示Log
+            }
+            release {
+                buildConfigField "boolean", "LOG_DEBUG", "false"// 不显示Log
+                minifyEnabled true//混淆
+                zipAlignEnabled true //Zipalign优化
+                shrinkResources true// 移除无用的resource文件
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
         }
     }
     repositories {
