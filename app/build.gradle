@@ -28,9 +28,9 @@ android {
             }
             release {
                 buildConfigField "boolean", "LOG_DEBUG", "false"// 不显示Log
-                minifyEnabled true//混淆
-                zipAlignEnabled true //Zipalign优化
-                shrinkResources true// 移除无用的resource文件
+//                minifyEnabled false//混淆
+//                zipAlignEnabled false //Zipalign优化
+//                shrinkResources false// 移除无用的resource文件
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             }
         }
