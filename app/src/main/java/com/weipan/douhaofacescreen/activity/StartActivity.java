@@ -55,6 +55,22 @@ public class StartActivity extends BaseActivity {
         });
     }
 
+    private void setSystemUIVisible(boolean show) {
+        if (show) {
+            int uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            uiFlags |= 0x00001000;
+            getWindow().getDecorView().setSystemUiVisibility(uiFlags);
+        } else {
+            int uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            uiFlags |= 0x00001000;
+            getWindow().getDecorView().setSystemUiVisibility(uiFlags);
+        }
+    }
+
     public void getAuthInfo() {
         WxPayFace.getInstance().getWxpayfaceRawdata(new IWxPayfaceCallback() {
             public void response(Map paramMap) throws RemoteException {
@@ -81,21 +97,21 @@ public class StartActivity extends BaseActivity {
                                     if (ObjectUtils.equals("200", result.getCode())) {
                                         Constant.authInfo = result.getData().getAuthinfo();
                                         //开启一个子线程，定时刷新
-//                                        new Thread(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                Looper.prepare();
-//                                                try {
-////                                                    int millis = Integer.parseInt(result.getData().getExpires_in());
-////                                                    Log.i("test", millis + "");
-//                                                    Thread.sleep(24 * 60 * 60 * 1000);
-//                                                    getAuthInfo();
-//                                                } catch (InterruptedException e) {
-//                                                    e.printStackTrace();
-//                                                }
-//                                                Looper.loop();
-//                                            }
-//                                        }).start();
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Looper.prepare();
+                                                try {
+//                                                    int millis = Integer.parseInt(result.getData().getExpires_in());
+//                                                    Log.i("test", millis + "");
+                                                    Thread.sleep(24 * 60 * 60 * 1000);
+                                                    getAuthInfo();
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                Looper.loop();
+                                            }
+                                        }).start();
                                     } else {
                                         Toast.makeText(getApplicationContext(), " Msg = " + result.getMsg(), Toast.LENGTH_LONG).show();
                                     }
@@ -124,10 +140,13 @@ public class StartActivity extends BaseActivity {
         WxPayFace.getInstance().releaseWxpayface(StartActivity.this);
     }
 
-    @OnClick({R.id.iv_setting, R.id.tv_no_member, R.id.tv_member})
+    @OnClick({R.id.iv_setting, R.id.tv_no_member, R.id.tv_member, R.id.tv_hind})
     public void onViewClicked(View view) {
         ringtone.play();
         switch (view.getId()) {
+            case R.id.tv_hind:
+                setSystemUIVisible(true);
+                break;
             case R.id.iv_setting:
                 Intent intent = new Intent(StartActivity.this, MoreActivity.class);
                 startActivity(intent);
@@ -156,6 +175,5 @@ public class StartActivity extends BaseActivity {
         Intent intent = new Intent(StartActivity.this, MainActivity.class);
         intent.putExtra("memberNum", memberNum);
         startActivity(intent);
-
     }
 }
