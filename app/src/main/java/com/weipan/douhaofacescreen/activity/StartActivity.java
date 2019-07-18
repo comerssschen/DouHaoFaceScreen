@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -53,22 +54,6 @@ public class StartActivity extends BaseActivity {
                 getAuthInfo();
             }
         });
-    }
-
-    private void setSystemUIVisible(boolean show) {
-        if (show) {
-            int uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            uiFlags |= 0x00001000;
-            getWindow().getDecorView().setSystemUiVisibility(uiFlags);
-        } else {
-            int uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            uiFlags |= 0x00001000;
-            getWindow().getDecorView().setSystemUiVisibility(uiFlags);
-        }
     }
 
     public void getAuthInfo() {
@@ -145,7 +130,7 @@ public class StartActivity extends BaseActivity {
         ringtone.play();
         switch (view.getId()) {
             case R.id.tv_hind:
-                setSystemUIVisible(true);
+                BarUtils.setNavBarVisibility(this, true);
                 break;
             case R.id.iv_setting:
                 Intent intent = new Intent(StartActivity.this, MoreActivity.class);

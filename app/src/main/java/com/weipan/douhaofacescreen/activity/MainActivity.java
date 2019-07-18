@@ -561,7 +561,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
     private void scanQRCode(String result) {
         loadingDialog.show();
         ArgScanQRCode arg = new ArgScanQRCode();
